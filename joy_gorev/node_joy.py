@@ -18,7 +18,12 @@ class joy(Node):
         msg1.data=int(data1.axes[1]*63)
         self.speed.publish(msg1)
         msg2=Int32()
-        msg2.data=int((math.degrees(math.atan2(data1.axes[1],-data1.axes[0]))+90)%360)
+        
+        if data1.axes[1]>=0:
+            msg2.data=int((-data1.axes[0])*90+180)
+        else:
+            msg2.data=int((data1.axes[0]*90+360)%360)
+
         self.angle.publish(msg2)
 
 def main(args=None):
