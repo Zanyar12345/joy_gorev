@@ -41,18 +41,18 @@ class joy(Node):
             R = (self.length/2) / math.tan(abs(delta))
 
             if delta > 0:
-                FL_rad =  math.atan(L2 / (R - self.width / 2))
-                FR_rad =  math.atan(L2 / (R + self.width / 2))
-                RL_rad = -math.atan(L2 / (R - self.width / 2))
-                RR_rad = -math.atan(L2 / (R + self.width / 2))
+                FL_rad =  math.atan((self.length/2) / (R - self.width / 2))
+                FR_rad =  math.atan((self.length/2) / (R + self.width / 2))
+                RL_rad = -math.atan((self.length/2) / (R - self.width / 2))
+                RR_rad = -math.atan((self.length/2) / (R + self.width / 2))
 
                 R_fl = R - self.width / 2
                 R_fr = R + self.width / 2
             else:
-                FL_rad = -math.atan(L2 / (R + self.width / 2))
-                FR_rad = -math.atan(L2 / (R - self.width / 2))
-                RL_rad =  math.atan(L2 / (R + self.width / 2))
-                RR_rad =  math.atan(L2 / (R - self.width / 2))
+                FL_rad = -math.atan((self.length/2) / (R + self.width / 2))
+                FR_rad = -math.atan((self.length/2) / (R - self.width / 2))
+                RL_rad =  math.atan((self.length/2) / (R + self.width / 2))
+                RR_rad =  math.atan((self.length/2) / (R - self.width / 2))
 
                 R_fl = R + self.width / 2
                 R_fr = R - self.width / 2
