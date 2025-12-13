@@ -19,13 +19,15 @@ class joy(Node):
         self.angle_rl = self.create_publisher(Int32, "wheel_rear_left_angle", 10)
         self.angle_rr = self.create_publisher(Int32, "wheel_rear_right_angle", 10)
 
-        self.speed = self.create_publisher(Int32, "wheel_front_left_speed", 10)
+        self.speed_fl = self.create_publisher(Int32, "wheel_front_left_speed", 10)
+        self.speed_fr = self.create_publisher(Int32, "wheel_front_right_speed", 10)
+        self.speed_rl = self.create_publisher(Int32, "wheel_rear_left_speed", 10)
+        self.speed_rr = self.create_publisher(Int32, "wheel_rear_right_speed", 10)
+
         self.get_logger().info("Basladi")
 
     def msg(self, data1: Joy):
-        msg = Int32()
-        msg.data = int(data1.axes[1] * 63)
-        self.speed.publish(msg)
+        base_speed = int(data1.axes[1] * 63)
 
         steer = data1.axes[0]
         max_steer = math.radians(35)
@@ -34,23 +36,33 @@ class joy(Node):
 
         if abs(delta) < eps:
             FL = FR = RL = RR = 180
+            v_fl = v_fr = v_rl = v_rr = base_speed
         else:
             R = self.length / math.tan(abs(delta))
 
             if delta > 0:
                 FL_rad = math.atan(self.length / (R - self.width / 2))
                 FR_rad = math.atan(self.length / (R + self.width / 2))
+                R_fl = R - self.width / 2
+                R_fr = R + self.width / 2
             else:
                 FL_rad = -math.atan(self.length / (R + self.width / 2))
                 FR_rad = -math.atan(self.length / (R - self.width / 2))
-
+                R_fl = R + self.width / 2
+                R_fr = R - self.width / 2
 
             FL = math.degrees(FL_rad) + 180
             FR = math.degrees(FR_rad) + 180
             RL = 180
             RR = 180
 
+            v_fl = base_speed * (R_fl / R)
+            v_fr = base_speed * (R_fr / R)
+            v_rl = v_fl
+            v_rr = v_fr
+
         msg = Int32()
+
         msg.data = int(FL)
         self.angle_fl.publish(msg)
 
@@ -63,6 +75,18 @@ class joy(Node):
         msg.data = int(RR)
         self.angle_rr.publish(msg)
 
+        msg.data = int(v_fl)
+        self.speed_fl.publish(msg)
+
+        msg.data = int(v_fr)
+        self.speed_fr.publish(msg)
+
+        msg.data = int(v_rl)
+        self.speed_rl.publish(msg)
+
+        msg.data = int(v_rr)
+        self.speed_rr.publish(msg)
+
 def main(args=None):
     rcl.init(args=args)
     node = joy()
@@ -71,5 +95,6 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
+
 
 
