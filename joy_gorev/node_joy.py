@@ -5,32 +5,70 @@ from sensor_msgs.msg import Joy
 from example_interfaces.msg import Int32
 import math
 
-#63 90 180 270 sol,ileri + sağ,geri -
-
 class joy(Node):
     def __init__(self):
         super().__init__("Publisher")
-        self.create_subscription(Joy,"joy",self.msg,10)
-        self.angle=self.create_publisher(Int32,"wheel_front_left_angle",10)
-        self.speed=self.create_publisher(Int32,"wheel_front_left_speed",10)
-    def msg(self,data1:Joy):
-        msg1=Int32()
-        msg1.data=int(data1.axes[1]*63)
-        self.speed.publish(msg1)
-        msg2=Int32()
-        
-        if data1.axes[1]>=0:
-            msg2.data=int((-data1.axes[0])*90+180)
-        else:
-            msg2.data=int((data1.axes[0]*90+360)%360)
 
-        self.angle.publish(msg2)
+        self.width  = 84.0
+        self.length = 113.0
+
+        self.create_subscription(Joy, "joy", self.msg, 10)
+
+        self.angle_fl = self.create_publisher(Int32, "wheel_front_left_angle", 10)
+        self.angle_fr = self.create_publisher(Int32, "wheel_front_right_angle", 10)
+        self.angle_rl = self.create_publisher(Int32, "wheel_rear_left_angle", 10)
+        self.angle_rr = self.create_publisher(Int32, "wheel_rear_right_angle", 10)
+
+        self.speed = self.create_publisher(Int32, "wheel_front_left_speed", 10)
+
+    def msg(self, data1: Joy):
+        msg = Int32()
+        msg.data = int(data1.axes[1] * 63)
+        self.speed.publish(msg)
+
+        steer = data1.axes[0]
+        max_steer = math.radians(35)
+        delta = steer * max_steer
+        eps = 1e-3
+
+        if abs(delta) < eps:
+            FL = FR = RL = RR = 180
+        else:
+            R = self.length / math.tan(abs(delta))
+
+            if delta > 0:
+                FL_rad = math.atan(self.length / (R - self.width / 2))
+                FR_rad = math.atan(self.length / (R + self.width / 2))
+            else:
+                FL_rad = -math.atan(self.length / (R + self.width / 2))
+                FR_rad = -math.atan(self.length / (R - self.width / 2))
+
+
+            FL = math.degrees(FL_rad) + 180
+            FR = math.degrees(FR_rad) + 180
+            RL = 180
+            RR = 180
+
+        msg = Int32()
+        msg.data = int(FL)
+        self.angle_fl.publish(msg)
+
+        msg.data = int(FR)
+        self.angle_fr.publish(msg)
+
+        msg.data = int(RL)
+        self.angle_rl.publish(msg)
+
+        msg.data = int(RR)
+        self.angle_rr.publish(msg)
 
 def main(args=None):
     rcl.init(args=args)
-    node=joy()
+    node = joy()
     rcl.spin(node)
     rcl.shutdown()
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
+
+
