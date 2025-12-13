@@ -20,6 +20,7 @@ class joy(Node):
         self.angle_rr = self.create_publisher(Int32, "wheel_rear_right_angle", 10)
 
         self.speed = self.create_publisher(Int32, "wheel_front_left_speed", 10)
+        self.get_logger().info("Basladi")
 
     def msg(self, data1: Joy):
         msg = Int32()
