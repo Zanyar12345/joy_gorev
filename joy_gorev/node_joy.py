@@ -30,42 +30,58 @@ class joy(Node):
         base_speed = int(data1.axes[1] * 63)
 
         steer = data1.axes[0]
-        max_steer = math.radians(35)
-        delta = steer * max_steer
-        eps = 1e-3
+        delta = 90*data1.axes[0]+90 # önce 0 180 yapıp karışıklığı engelledim
 
-        if abs(delta) < eps:
-            FL = FR = RL = RR = 180
-            v_fl = v_fr = v_rl = v_rr = base_speed
+
+        R = abs((self.length/2) / math.tan(math.radians(delta))) # merkezdenin noktaya uzaklığı
+
+        if steer > 0:
+                # FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
+                # FR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
+                RL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
+                RR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
+
+                R_fl = ((R - self.width / 2)**2+(self.length / 2)**2)**(1/2) # uzaklıklar
+                R_fr = ((R + self.width / 2)**2+(self.length / 2)**2)**(1/2)
+
+                RL = (math.degrees(RL_rad)) # üst teker ile alt teker toplamı 180. küçükten büyüğü çıkardım çünkü diğeri geniş açı olacak
+                RR = (math.degrees(RR_rad))
+                FL = 180-RL
+                FR = 180-RR
+
+                FL = 270-(math.degrees(FL_rad))
+                FR = 270-(math.degrees(FR_rad))
+                RL = 270-(math.degrees(RL_rad)) # 270 90 arası olduğu için 270ten çıkardım
+                RR = 270-(math.degrees(RR_rad))
         else:
-            R = (self.length/2) / math.tan(abs(delta))
+                
+                FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
+                FR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2)) 
+                # RL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
+                # RR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
 
-            if delta > 0:
-                FL_rad =  math.atan((self.length/2) / (R - self.width / 2))
-                FR_rad =  math.atan((self.length/2) / (R + self.width / 2))
-                RL_rad = -math.atan((self.length/2) / (R - self.width / 2))
-                RR_rad = -math.atan((self.length/2) / (R + self.width / 2))
+                R_fl = ((R + self.width / 2)**2+(self.length / 2)**2)**(1/2) # yarıçaplar (alt üst eşit o yüzden yanları hesaplasak yeterli)
+                R_fr = ((R - self.width / 2)**2+(self.length / 2)**2)**(1/2)
 
-                R_fl = R - self.width / 2
-                R_fr = R + self.width / 2
-            else:
-                FL_rad = -math.atan((self.length/2) / (R + self.width / 2))
-                FR_rad = -math.atan((self.length/2) / (R - self.width / 2))
-                RL_rad =  math.atan((self.length/2) / (R + self.width / 2))
-                RR_rad =  math.atan((self.length/2) / (R - self.width / 2))
+                FL = (math.degrees(FL_rad))
+                FR = (math.degrees(FR_rad))
+                RL = 180-FL
+                RR = 180-FR
 
-                R_fl = R + self.width / 2
-                R_fr = R - self.width / 2
+                FL = 270-(math.degrees(FL_rad))
+                FR = 270-(math.degrees(FR_rad))
+                RL = 270-(math.degrees(RL_rad))
+                RR = 270-(math.degrees(RR_rad))
 
-            FL = math.degrees(FL_rad) + 180
-            FR = math.degrees(FR_rad) + 180
-            RL = math.degrees(RL_rad) + 180
-            RR = math.degrees(RR_rad) + 180
+        if R_fl>=R_fr:
+                v_fl = base_speed # Yarıçap büyük hız büyük
+                v_fr = base_speed*(R_fr / R_fl) # Yarıçapı büyüğe göre oranlama
+        else:
+                v_fl = base_speed*(R_fl / R_fr) 
+                v_fr = base_speed
 
-            v_fl = base_speed * (R_fl / R)
-            v_fr = base_speed * (R_fr / R)
-            v_rl = v_fl
-            v_rr = v_fr
+        v_rl = v_fl
+        v_rr = v_fr
 
         msg = Int32()
 
