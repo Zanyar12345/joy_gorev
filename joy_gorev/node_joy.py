@@ -48,7 +48,7 @@ class joy(Node):
                 R_fl = ((R - self.width / 2)**2+(self.length / 2)**2)**(1/2) # uzaklıklar
                 R_fr = ((R + self.width / 2)**2+(self.length / 2)**2)**(1/2)
 
-                RL = (math.degrees(RL_rad)) # üst teker ile alt teker toplamı 180. küçükten büyüğü çıkardım çünkü diğeri geniş açı olacak
+                RL = (math.degrees(RL_rad)) # üst teker ile alt teker toplamı 180. 180den küçüğü çıkardım çünkü geniş açı olacak
                 RR = (math.degrees(RR_rad))
                 FL = 180-RL
                 FR = 180-RR
