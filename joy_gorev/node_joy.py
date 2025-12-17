@@ -32,8 +32,12 @@ class joy(Node):
         steer = data1.axes[0]
         delta = 90*data1.axes[0]+90 # önce 0 180 yapıp karışıklığı engelledim
 
-
-        R = abs((self.length/2) / math.tan(math.radians(delta))) # merkezdenin noktaya uzaklığı
+        if (delta>=89 and delta<=90) or (delta>=179 and delta<=180):
+            R=0
+        elif  delta<=1:
+            R="R"
+        else:
+            R = abs((self.length/2) / math.tan(math.radians(delta))) # merkezin noktaya uzaklığı
 
         if steer > 0:
                 # FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
@@ -51,7 +55,7 @@ class joy(Node):
 
                 FL = 270-(math.degrees(FL_rad))
                 FR = 270-(math.degrees(FR_rad))
-                RL = 270-(math.degrees(RL_rad)) # 270 90 arası olduğu için 270ten çıkardım
+                RL = 270-(math.degrees(RL_rad)) # 270 90 arası olduğu için 270ten çıkardık
                 RR = 270-(math.degrees(RR_rad))
         else:
                 
@@ -72,9 +76,13 @@ class joy(Node):
                 FR = 270-(math.degrees(FR_rad))
                 RL = 270-(math.degrees(RL_rad))
                 RR = 270-(math.degrees(RR_rad))
-
-        if R_fl>=R_fr:
-                v_fl = base_speed # Yarıçap büyük hız büyük
+        if R=="R":
+            v_rr=base_speed
+            v_rl=base_speed
+            v_fr=base_speed
+            v_fl=base_speed
+        elif R_fl>=R_fr:
+                v_fl = base_speed               # Yarıçap büyük hız büyük
                 v_fr = base_speed*(R_fr / R_fl) # Yarıçapı büyüğe göre oranlama
         else:
                 v_fl = base_speed*(R_fl / R_fr) 
@@ -83,19 +91,35 @@ class joy(Node):
         v_rl = v_fl
         v_rr = v_fr
 
+              
         msg = Int32()
+        if  R=="R":
 
-        msg.data = int(FL)
-        self.angle_fl.publish(msg)
+            msg.data = int(180)
+            self.angle_fl.publish(msg)
 
-        msg.data = int(FR)
-        self.angle_fr.publish(msg)
+            msg.data = int(180)
+            self.angle_fr.publish(msg)
 
-        msg.data = int(RL)
-        self.angle_rl.publish(msg)
+            msg.data = int(180)
+            self.angle_rl.publish(msg)
 
-        msg.data = int(RR)
-        self.angle_rr.publish(msg)
+            msg.data = int(180)
+            self.angle_rr.publish(msg)
+
+        else:
+
+            msg.data = int(180)
+            self.angle_fl.publish(msg)
+
+            msg.data = int(180)
+            self.angle_fr.publish(msg)
+
+            msg.data = int(180)
+            self.angle_rl.publish(msg)
+
+            msg.data = int(180)
+            self.angle_rr.publish(msg)
 
         msg.data = int(v_fl)
         self.speed_fl.publish(msg)
