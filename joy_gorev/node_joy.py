@@ -109,16 +109,16 @@ class joy(Node):
 
         else:
 
-            msg.data = int(180)
+            msg.data = int(FL)
             self.angle_fl.publish(msg)
 
-            msg.data = int(180)
+            msg.data = int(FR)
             self.angle_fr.publish(msg)
 
-            msg.data = int(180)
+            msg.data = int(RL)
             self.angle_rl.publish(msg)
 
-            msg.data = int(180)
+            msg.data = int(RR)
             self.angle_rr.publish(msg)
 
         msg.data = int(v_fl)
