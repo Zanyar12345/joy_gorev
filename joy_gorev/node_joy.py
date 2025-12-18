@@ -31,11 +31,12 @@ class joy(Node):
 
         steer = data1.axes[0]
         delta = 90*data1.axes[0]+90 # önce 0 180 yapıp karışıklığı engelledim
-
+        K=0
         if (delta>=89 and delta<=90) or (delta>=179 and delta<=180):
             R=0
         elif  delta<=1:
-            R="R"
+            R=1
+            K=1
         else:
             R = abs((self.length/2) / math.tan(math.radians(delta))) # merkezin noktaya uzaklığı
 
@@ -76,7 +77,7 @@ class joy(Node):
                 FR = 270-(math.degrees(FR_rad))
                 RL = 270-(math.degrees(RL_rad))
                 RR = 270-(math.degrees(RR_rad))
-        if R=="R":
+        if K==1:
             v_rr=base_speed
             v_rl=base_speed
             v_fr=base_speed
