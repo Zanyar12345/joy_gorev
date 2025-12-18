@@ -94,7 +94,7 @@ class joy(Node):
 
               
         msg = Int32()
-        if  R=="R":
+        if  K==1:
 
             msg.data = int(180)
             self.angle_fl.publish(msg)
