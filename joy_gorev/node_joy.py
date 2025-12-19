@@ -38,7 +38,7 @@ class joy(Node):
         elif  delta<=1 or delta>=179:
             R=0
         else:
-            R = abs((self.length/2) / math.tan(math.radians(delta-90)) # merkezin noktaya uzaklığı
+            R = (self.length/2) / math.tan(math.radians(abs(delta-90)) # merkezin noktaya uzaklığı
 
         if steer > 0:
                 # FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
