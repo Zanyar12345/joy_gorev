@@ -39,13 +39,15 @@ class joy(Node):
             R=0
         else:
             R = (self.length/2) / math.tan(math.radians(abs(delta-90))) # merkezin noktaya uzaklığı
-
+#90 0 -90 126 54
         if steer > 0:
                 # FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
                 # FR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
-                RL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
-                RR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
-
+                RR_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
+                if (R - self.width / 2)>=0:
+                    RL_rad =  math.atan2((R - self.width / 2) , (self.length / 2))
+                else:
+                    RL_rad =  math.atan2(-(R - self.width / 2) , -(self.length / 2))
                 R_fl = ((R - self.width / 2)**2+(self.length / 2)**2)**(1/2) # uzaklıklar
                 R_fr = ((R + self.width / 2)**2+(self.length / 2)**2)**(1/2)
 
@@ -61,7 +63,10 @@ class joy(Node):
         else:
                 
                 FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
-                FR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2)) 
+                if (R - self.width / 2)>=0:
+                    FR_rad =  math.atan2((R - self.width / 2) , (self.length / 2)) 
+                else:
+                    FR_rad =  math.atan2(-(R - self.width / 2) , -(self.length / 2)) 
                 # RL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
                 # RR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
 
@@ -142,6 +147,7 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
+
 
 
 
