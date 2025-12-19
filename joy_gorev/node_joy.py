@@ -38,7 +38,7 @@ class joy(Node):
         elif  delta<=1 or delta>=179:
             R=0
         else:
-            R = (self.length/2) / math.tan(math.radians(abs(delta-90)) # merkezin noktaya uzaklığı
+            R = (self.length/2) / math.tan(math.radians(abs(delta-90))) # merkezin noktaya uzaklığı
 
         if steer > 0:
                 # FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
@@ -54,10 +54,10 @@ class joy(Node):
                 FL = 180-RL
                 FR = 180-RR
 
-                FL = 270-(math.degrees(FL_rad))
-                FR = 270-(math.degrees(FR_rad))
-                RL = 270-(math.degrees(RL_rad)) # 270 90 arası olduğu için 270ten çıkardık
-                RR = 270-(math.degrees(RR_rad))
+                FL = 270-FL
+                FR = 270-FR
+                RL = 270-RL # 270 90 arası olduğu için 270ten çıkardık
+                RR = 270-RR
         else:
                 
                 FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
@@ -73,10 +73,10 @@ class joy(Node):
                 RL = 180-FL
                 RR = 180-FR
 
-                FL = 270-(math.degrees(FL_rad))
-                FR = 270-(math.degrees(FR_rad))
-                RL = 270-(math.degrees(RL_rad))
-                RR = 270-(math.degrees(RR_rad))
+                FL = 270-FL
+                FR = 270-FR
+                RL = 270-RL
+                RR = 270-RR
         if K==1:
             v_rr=base_speed
             v_rl=base_speed
