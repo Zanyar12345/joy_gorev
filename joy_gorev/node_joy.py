@@ -32,9 +32,9 @@ class joy(Node):
         steer = data1.axes[0]
         delta = 90*data1.axes[0]+90 # önce 0 180 yapıp karışıklığı engelledim
         K=0
-        if (delta>=89 and delta<=90) or (delta>=179 and delta<=180):
+        if (delta>=89 and delta<=90) or (delta>=90 and delta<=91):
             R=0
-        elif  delta<=1:
+        elif  delta<=1 or delta>=179:
             R=1
             K=1
         else:
