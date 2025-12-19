@@ -39,7 +39,7 @@ class joy(Node):
             R=0
         else:
             R = (self.length/2) / math.tan(math.radians(abs(delta-90))) # merkezin noktaya uzaklığı
-#90 0 -90 126 54
+
         if steer > 0:
                 # FL_rad =  math.atan2((R + self.width / 2) , (self.length / 2))
                 # FR_rad =  math.atan2(abs(R - self.width / 2) , (self.length / 2))
